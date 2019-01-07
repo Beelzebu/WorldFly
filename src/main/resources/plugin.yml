@@ -1,0 +1,4 @@
+name: WorldFly
+version: @version@
+main: io.github.beelzebu.worldfly.WorldFly
+authors: [Beelzebu]

@@ -2,7 +2,9 @@ package io.github.beelzebu.worldfly;
 
 import io.github.beelzebu.worldfly.command.CommandAPI;
 import io.github.beelzebu.worldfly.command.FlyCommand;
+import io.github.beelzebu.worldfly.listener.FlyListener;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,5 +34,6 @@ public final class WorldFly extends JavaPlugin {
         if (getConfig().getBoolean("command.enabled")) {
             CommandAPI.registerCommand(this, flyCommand = new FlyCommand(getConfig().getString("command.name", "fly"), getConfig().getString("command.permission"), getConfig().getString("command.aliases")));
         }
+        Bukkit.getPluginManager().registerEvents(new FlyListener(this), this);
     }
 }

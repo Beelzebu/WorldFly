@@ -10,17 +10,19 @@ import org.bukkit.command.CommandSender;
  */
 public abstract class Command extends org.bukkit.command.Command {
 
+    protected final boolean async;
 
-    public Command(String command, String permission, String... aliases) {
+    public Command(String command, String permission, boolean async, String... aliases) {
         super(command);
         setPermission(permission);
         setAliases(Arrays.asList(aliases));
+        this.async = async;
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (getPermission() == null || sender.hasPermission(getPermission())) {
-            if (Bukkit.isPrimaryThread()) {
+            if (async && Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(WorldFly.getPlugin(WorldFly.class), () -> onCommand(sender, args));
             } else {
                 onCommand(sender, args);

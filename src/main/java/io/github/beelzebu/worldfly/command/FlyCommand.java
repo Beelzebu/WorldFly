@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
  */
 public class FlyCommand extends Command {
 
+    private final WorldFly plugin = WorldFly.getPlugin(WorldFly.class);
+
     public FlyCommand(String command, String permission, String... aliases) {
-        super(command, permission, aliases);
+        super(command, permission, false, aliases);
     }
 
     @Override
@@ -21,6 +23,10 @@ public class FlyCommand extends Command {
             if (args.length == 1) {
                 handleFlyOther(sender, Bukkit.getPlayer(args[0]), args);
             } else {
+                if (plugin.getConfig().getStringList("disabled-worlds").contains(player.getWorld().getName()) && !player.hasPermission(getPermission() + ".bypass-disabled")) {
+                    player.sendMessage(WorldFly.replace(plugin.getConfig().getString("messages.fly-disabled-world"), player));
+                    return;
+                }
                 boolean currentStatus = player.getAllowFlight();
                 if (currentStatus) {
                     sender.sendMessage(WorldFly.replace(WorldFly.getPlugin(WorldFly.class).getConfig().getString("messages.fly-command.disabled"), sender));
@@ -43,6 +49,10 @@ public class FlyCommand extends Command {
         if (target == null) {
             sender.sendMessage(WorldFly.replace("&cPlayer " + args[0] + " doesn't exists."));
         } else {
+            if (plugin.getConfig().getStringList("disabled-worlds").contains(target.getWorld().getName()) && !target.hasPermission(getPermission() + ".bypass-disabled")) {
+                sender.sendMessage(WorldFly.replace(plugin.getConfig().getString("messages.fly-disabled-world"), sender));
+                return;
+            }
             boolean currentStatus = target.getAllowFlight();
             if (currentStatus) {
                 sender.sendMessage(WorldFly.replace(WorldFly.getPlugin(WorldFly.class).getConfig().getString("messages.fly-command.disabled-other"), target));

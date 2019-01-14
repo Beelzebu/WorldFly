@@ -23,7 +23,7 @@ public class FlyListener implements Listener {
     public void onWorldChange(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
         World world = player.getWorld();
-        if (player.isFlying() && plugin.getConfig().getStringList("disabled-worlds").contains(world.getName())) {
+        if (player.isFlying() && plugin.getConfig().getStringList("disabled-worlds").contains(world.getName()) && (plugin.getFlyCommand() != null && !player.hasPermission(plugin.getFlyCommand().getPermission() + ".bypass-disabled"))) {
             player.setAllowFlight(false);
             player.setFlying(false);
             player.sendMessage(WorldFly.replace(plugin.getConfig().getString("messages.fly-disabled-world"), player));
@@ -34,7 +34,7 @@ public class FlyListener implements Listener {
     public void onFlyChange(PlayerToggleFlightEvent e) {
         Player player = e.getPlayer();
         World world = player.getWorld();
-        if (e.isFlying() && plugin.getConfig().getStringList("disabled-worlds").contains(world.getName())) {
+        if (e.isFlying() && plugin.getConfig().getStringList("disabled-worlds").contains(world.getName()) && (plugin.getFlyCommand() != null && !player.hasPermission(plugin.getFlyCommand().getPermission() + ".bypass-disabled"))) {
             e.setCancelled(true);
             player.setAllowFlight(false);
             player.setFlying(false);
